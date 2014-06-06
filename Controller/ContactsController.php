@@ -5,7 +5,10 @@
  */
 
 App::uses('AppController', 'Controller');
-
+/**
+ * @property Contact $Contact The ContactUs.Contact Model
+ * @property RecaptchaComponent $Recaptcha The Recaptcha.Recaptcha Component
+ */
 class ContactsController extends ContactUsAppController {
 
     public $components = array('Recaptcha.Recaptcha');
@@ -38,6 +41,7 @@ class ContactsController extends ContactUsAppController {
                     $this->Session->setFlash('Could not send message, please try again', null, array('class'=>'alert-error'));
                 }
             } else{
+                $this->Contact->validationErrors['recaptcha_response_field'][0] = $this->Recaptcha->error;
                 $this->Session->setFlash('Message could not be sent, please try again', null, array('class'=>'alert-error'));
             }
         }
