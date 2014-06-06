@@ -15,7 +15,8 @@ class ContactsController extends ContactUsAppController {
 
     public function message(){
         if($this->request->is('post')){
-            if($this->Recaptcha->verify() && $this->Contact->save($this->request->data)){
+            $this->Contact->set($this->request->data);
+            if($this->Recaptcha->verify() && $this->Contact->save()){
 		/**
 		 * added for backwards compatibility
 		 */
@@ -41,6 +42,10 @@ class ContactsController extends ContactUsAppController {
                     $this->Session->setFlash('Could not send message, please try again', null, array('class'=>'alert-error'));
                 }
             } else{
+                //set the errrors for the form if they exist
+                $this->Contact->validates();
+                
+                //set the error for the captcha
                 $this->Contact->validationErrors['recaptcha_response_field'][0] = $this->Recaptcha->error;
                 $this->Session->setFlash('Message could not be sent, please try again', null, array('class'=>'alert-error'));
             }
